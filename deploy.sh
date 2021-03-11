@@ -16,5 +16,5 @@ echo "Connecting to ec2 instance"
 ssh -i kafka-demo-ec2-instance.pem ec2-user@18.185.102.47 sudo fuser -k 8080/tcp
 echo "Killed process running on port 8080"
 
-ssh -i kafka-demo-ec2-instance.pem ec2-user@18.185.102.47 java -jar kafka-demo-0.0.1-SNAPSHOT.jar
+ssh -i kafka-demo-ec2-instance.pem ec2-user@18.185.102.47 java -jar kafka-demo-0.0.1-SNAPSHOT.jar --env=production
 echo "Started server using java -jar command"

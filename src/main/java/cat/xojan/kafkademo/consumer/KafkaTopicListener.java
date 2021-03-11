@@ -3,17 +3,19 @@ package cat.xojan.kafkademo.consumer;
 import cat.xojan.kafkademo.KafkaConstants;
 import cat.xojan.kafkademo.model.Message;
 import cat.xojan.kafkademo.model.Train;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class MessageListener {
-    @Autowired
-    SimpMessagingTemplate template;
+public class KafkaTopicListener {
+    private static final Logger logger = LoggerFactory.getLogger(KafkaTopicListener.class);
+
+    private List<Train> trainsData = new ArrayList<>();
 
     @KafkaListener(
             topics = KafkaConstants.KAFKA_TOPIC,
@@ -21,7 +23,6 @@ public class MessageListener {
     )
     public void listen(Message message) {
         System.out.println("consuming topic via kafka listener..."+ message);
-        // template.convertAndSend("/topic/group", message);
     }
 
     @KafkaListener(
@@ -29,8 +30,12 @@ public class MessageListener {
             groupId = KafkaConstants.GROUP_ID
     )
     public void listen(List<Train> trains) {
-        System.out.println("consuming topic via kafka listener..."+ trains);
-        // template.convertAndSend("/topic/group", message);
+        logger.debug("Consuming Trains data topic");
+        trainsData = trains;
+    }
+
+    public List<Train> getTrainsData() {
+        return trainsData;
     }
 }
 
