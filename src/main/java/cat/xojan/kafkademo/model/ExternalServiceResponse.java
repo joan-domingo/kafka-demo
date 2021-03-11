@@ -2,10 +2,10 @@ package cat.xojan.kafkademo.model;
 
 import java.util.List;
 
-public class GeoPosition {
+public class ExternalServiceResponse {
     private List<Feature> features;
 
-    public GeoPosition() {}
+    public ExternalServiceResponse() {}
 
     public void setFeatures(List<Feature> features) {
         this.features = features;
@@ -17,7 +17,7 @@ public class GeoPosition {
 
     @Override
     public String toString() {
-        return "GeoPosition{" +
+        return "ExternalServiceResponse{" +
                 "features=" + features +
                 '}';
     }

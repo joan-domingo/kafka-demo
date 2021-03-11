@@ -1,6 +1,5 @@
 package cat.xojan.kafkademo.configuration;
 
-import cat.xojan.kafkademo.model.Message;
 import cat.xojan.kafkademo.model.Train;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -26,22 +25,12 @@ public class ProducerConfiguration {
     private String env;
 
     @Bean
-    public KafkaTemplate<String, Message> messageKafkaTemplate() {
-        return new KafkaTemplate<>(messageProducerFactory());
+    public KafkaTemplate<String, List<Train>> trainTopicKafkaTemplate() {
+        return new KafkaTemplate<>(trainTopicProducerFactory());
     }
 
     @Bean
-    public ProducerFactory<String, Message> messageProducerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfigurations());
-    }
-
-    @Bean
-    public KafkaTemplate<String, List<Train>> trainsKafkaTemplate() {
-        return new KafkaTemplate<>(trainsProducerFactory());
-    }
-
-    @Bean
-    public ProducerFactory<String, List<Train>> trainsProducerFactory() {
+    public ProducerFactory<String, List<Train>> trainTopicProducerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigurations());
     }
 

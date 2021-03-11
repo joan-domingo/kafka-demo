@@ -1,7 +1,8 @@
 package cat.xojan.kafkademo.configuration;
 
 import cat.xojan.kafkademo.KafkaConstants;
-import cat.xojan.kafkademo.model.Message;
+import cat.xojan.kafkademo.model.Train;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,26 +15,30 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static cat.xojan.kafkademo.KafkaConstants.getKafkaBroker;
 
 @EnableKafka
 @Configuration
-public class ListenerConfig {
+public class ConsumerConfiguration {
     @Value("${env:debug}")
     private String env;
 
     @Bean
-    ConcurrentKafkaListenerContainerFactory<String, Message> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Message> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    ConcurrentKafkaListenerContainerFactory<String, List<Train>> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, List<Train>> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
 
     @Bean
-    public ConsumerFactory<String, Message> consumerFactory() {
-        return new DefaultKafkaConsumerFactory<>(consumerConfigurations(), new StringDeserializer(), new JsonDeserializer<>(Message.class));
+    public ConsumerFactory<String, List<Train>> consumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(
+                consumerConfigurations(),
+                new StringDeserializer(),
+                new JsonDeserializer<>(new TypeReference<List<Train>>() {}));
     }
 
     @Bean
