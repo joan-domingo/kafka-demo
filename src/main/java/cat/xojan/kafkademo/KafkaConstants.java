@@ -2,6 +2,7 @@ package cat.xojan.kafkademo;
 
 public class KafkaConstants {
     public static final String KAFKA_TOPIC = "kafka-chat";
+    public static final String KAFKA_TOPIC_TRAINS = "kafka-topic-trains";
     public static final String GROUP_ID = "kafka-sandbox";
 
     public static String getKafkaBroker(String env) {

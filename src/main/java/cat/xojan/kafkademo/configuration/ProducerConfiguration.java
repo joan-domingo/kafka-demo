@@ -1,6 +1,7 @@
 package cat.xojan.kafkademo.configuration;
 
 import cat.xojan.kafkademo.model.Message;
+import cat.xojan.kafkademo.model.Train;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,7 @@ import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static cat.xojan.kafkademo.KafkaConstants.getKafkaBroker;
@@ -24,7 +26,22 @@ public class ProducerConfiguration {
     private String env;
 
     @Bean
-    public ProducerFactory<String, Message> producerFactory() {
+    public KafkaTemplate<String, Message> messageKafkaTemplate() {
+        return new KafkaTemplate<>(messageProducerFactory());
+    }
+
+    @Bean
+    public ProducerFactory<String, Message> messageProducerFactory() {
+        return new DefaultKafkaProducerFactory<>(producerConfigurations());
+    }
+
+    @Bean
+    public KafkaTemplate<String, List<Train>> trainsKafkaTemplate() {
+        return new KafkaTemplate<>(trainsProducerFactory());
+    }
+
+    @Bean
+    public ProducerFactory<String, List<Train>> trainsProducerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigurations());
     }
 
@@ -35,11 +52,6 @@ public class ProducerConfiguration {
         configurations.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configurations.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return configurations;
-    }
-
-    @Bean
-    public KafkaTemplate<String, Message> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
     }
 }
 
