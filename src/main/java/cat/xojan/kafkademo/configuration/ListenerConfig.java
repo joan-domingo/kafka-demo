@@ -21,7 +21,7 @@ import static cat.xojan.kafkademo.KafkaConstants.getKafkaBroker;
 @EnableKafka
 @Configuration
 public class ListenerConfig {
-    @Value("${env}")
+    @Value("${env:debug}")
     private String env;
 
     @Bean

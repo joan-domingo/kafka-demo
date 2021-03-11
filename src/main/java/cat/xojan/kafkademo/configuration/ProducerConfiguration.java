@@ -22,7 +22,7 @@ import static cat.xojan.kafkademo.KafkaConstants.getKafkaBroker;
 @EnableKafka
 @Configuration
 public class ProducerConfiguration {
-    @Value("${env}")
+    @Value("${env:debug}")
     private String env;
 
     @Bean
