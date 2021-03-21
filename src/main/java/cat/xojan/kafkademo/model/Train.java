@@ -1,5 +1,7 @@
 package cat.xojan.kafkademo.model;
 
+import java.util.Objects;
+
 public class Train {
     private String id;
     private String line;
@@ -55,5 +57,18 @@ public class Train {
                 ", longitude=" + longitude +
                 ", latitude=" + latitude +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Train train = (Train) o;
+        return Objects.equals(id, train.id) && Objects.equals(line, train.line) && Objects.equals(longitude, train.longitude) && Objects.equals(latitude, train.latitude);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, line, longitude, latitude);
     }
 }
