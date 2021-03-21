@@ -16,13 +16,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static cat.xojan.kafkademo.KafkaConstants.getKafkaBroker;
-
 @EnableKafka
 @Configuration
 public class ProducerConfiguration {
-    @Value("${env:debug}")
-    private String env;
+    @Value("${kafka.broker.url}")
+    private String kafkaBrokerUrl;
 
     @Bean
     public KafkaTemplate<String, List<Train>> trainTopicKafkaTemplate() {
@@ -37,7 +35,7 @@ public class ProducerConfiguration {
     @Bean
     public Map<String, Object> producerConfigurations() {
         Map<String, Object> configurations = new HashMap<>();
-        configurations.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, getKafkaBroker(env));
+        configurations.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBrokerUrl);
         configurations.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configurations.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return configurations;

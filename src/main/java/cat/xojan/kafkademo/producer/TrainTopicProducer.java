@@ -1,12 +1,12 @@
 package cat.xojan.kafkademo.producer;
 
-import cat.xojan.kafkademo.KafkaConstants;
 import cat.xojan.kafkademo.model.Feature;
 import cat.xojan.kafkademo.model.ExternalServiceResponse;
 import cat.xojan.kafkademo.model.Train;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -20,6 +20,11 @@ import java.util.TimerTask;
 
 @Service
 public class TrainTopicProducer {
+    @Value("${kafka.topic.trains}")
+    private String kafkaTopicTrains;
+
+    @Value("${external.service.baseUrl}")
+    private String baseUrl;
 
     @Autowired
     private KafkaTemplate<String, List<Train>> kafkaTemplate;
@@ -31,11 +36,16 @@ public class TrainTopicProducer {
 
     public TrainTopicProducer() {
         Timer timer = new Timer();
-        webClient = WebClient.create("https://geotren.fgc.cat");
+        webClient = WebClient.create(this.baseUrl);
         timer.schedule(poll(), 0, 5000);
     }
 
-    private TimerTask poll() {
+    // For testing purposes
+    protected TrainTopicProducer(String baseUrl) {
+        webClient = WebClient.create(baseUrl);
+    }
+
+    protected TimerTask poll() {
         return new TimerTask() {
             @Override
             public void run() {
@@ -49,7 +59,7 @@ public class TrainTopicProducer {
 
                     var trains = convertResponseToTrainDataList(response);
 
-                    kafkaTemplate.send(KafkaConstants.KAFKA_TOPIC_TRAINS, trains).get();
+                    kafkaTemplate.send(kafkaTopicTrains, trains).get();
                 } catch (Exception e) {
                     e.printStackTrace();
                     logger.warn("Failed to retrieve geo positions");
